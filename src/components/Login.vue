@@ -1,26 +1,29 @@
 <template>
     <div class="login-vue" :style="bg">
         <div class="container">
-            <p class="title">WELCOME</p>
+            <p class="title">荟晟体育</p>
             <div class="input-c">
-                <Input prefix="ios-contact" v-model="account" placeholder="用户名" clearable @on-blur="verifyAccount" />
+                <a-input ref="userNameInput" v-model="account" placeholder="Basic usage">
+                    <a-icon slot="prefix" type="user" />
+                    <a-tooltip slot="suffix" title="Extra information">
+                        <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
+                    </a-tooltip>
+                </a-input>
+                <!-- <Input prefix="ios-contact" v-model="account" placeholder="用户名" clearable @on-blur="verifyAccount" /> -->
                 <p class="error">{{ accountError }}</p>
             </div>
             <div class="input-c">
-                <Input type="password" v-model="pwd" prefix="md-lock" placeholder="密码" clearable @on-blur="verifyPwd"
-                    @keyup.enter.native="submit" />
+                <a-input-password v-model="pwd" placeholder="input password" />
                 <p class="error">{{ pwdError }}</p>
             </div>
-            <Button :loading="isShowLoading" class="submit" type="primary" @click="submit">登陆</Button>
-            <p class="account">
-                <span @click="register">注册账号</span> |
-                <span @click="forgetPwd">忘记密码</span>
-            </p>
+            <a-button class="submit" type="primary" @click="submit">登录</a-button>
+            <!-- <Button :loading="isShowLoading" class="submit" type="primary" @click="submit">登陆</Button> -->
         </div>
     </div>
 </template>
 
 <script>
+import vue from "../main"
 export default {
     name: "login",
     data() {
@@ -63,35 +66,28 @@ export default {
             // }
         },
         register() {
-            console.log(this.account);
-            console.log(this.pwd);
-            // this.$app
-            //   .auth()
-            //   .signUpWithEmailAndPassword(this.account, this.pwd)
-            //   .then((res) => {
-            //     console.log(res);
-            //     // 发送验证邮件成功
-            //   });
+            // console.log(this.account);
+            // console.log(this.pwd);
+            // vue.$app
+            //     .auth()
+            //     .signUpWithEmailAndPassword('hs_huisheng@163.com', 'Huishengtiyu123')
+            //     .then((res) => {
+            //         console.log(res);
+            //         // 发送验证邮件成功
+            //     });
         },
         forgetPwd() { },
         submit() {
-            // this.$app
-            //   .auth()
-            //   .signInWithEmailAndPassword(this.account, this.pwd)
-            //   .then((loginState) => {
-            //     console.log(loginState);
-            //     localStorage.setItem("userName", "小明");
-            //     localStorage.setItem(
-            //       "userImg",
-            //       "https://avatars3.githubusercontent.com/u/22117876?s=460&v=4"
-            //     );
-            //     // 登陆成功 假设这里是后台返回的 token
-            //     localStorage.setItem("token", "i_am_token");
-            //     this.$router.push({ path: "/" });
-            //   })
-            //   .catch((err) => {
-            //     console.log(err);
-            //   });
+            vue.$app
+                .auth()
+                .signInWithEmailAndPassword(this.account, this.pwd)
+                .then((loginState) => {
+                    console.log("wzzz", loginState)
+                    // this.$router.push({ path: "/" });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
     },
 };
@@ -108,7 +104,7 @@ export default {
 
 .login-vue .container {
     background: rgba(255, 255, 255, 0.5);
-    width: 300px;
+    width: 400px;
     text-align: center;
     border-radius: 10px;
     padding: 30px;
@@ -148,7 +144,7 @@ export default {
 
 .login-vue .input-c {
     margin: auto;
-    width: 200px;
+    width: 220px;
 }
 
 .login-vue .error {

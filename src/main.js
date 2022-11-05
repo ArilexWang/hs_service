@@ -2,12 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import cloudbase from '@cloudbase/js-sdk'
 import router from "./router";
+import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
+import createRoutes  from '@/utils/createRoutes'
+import store from './store'
+
 
 Vue.config.productionTip = false
+Vue.use(Antd);
+
 const app = cloudbase.init({
   env: 'test-7ggypkpn0dd471ba',
   // env: 'props-5gyd9ji1143b3cf0',
 })
+Vue.prototype.$app = app
 // app.auth()
 //     .anonymousAuthProvider()
 //     .signIn()
@@ -20,18 +28,23 @@ const auth = app.auth({
 })
 
 const loginState = auth.hasLoginState()
-if (loginState && loginState.isAnonymousAuth) {
+if (loginState) {
   console.log('haslogin', app.auth().hasLoginState())
-  auth.signOut().then(() => {
-    console.log("sign out")
-  })
 } else {
-  console.log('has not login')
+  console.log('has not login',app.auth().hasLoginState())
 }
 
 router.beforeEach(async (to, from, next) => {
-  console.log("to", to)
-  if (loginState && loginState.isAnonymousAuth) {
+  if (loginState) {
+    if(to.path === 'login'){
+      next({ path: '/' })
+    } else {
+      const routes = createRoutes(store.state.menuItems)
+      console.log(routes)
+      router.addRoutes(routes)
+      next()
+      // next({ path: to.path || '/' })
+    }
       // if (to.path === '/login') {
       //     next({ path: '/' })
       // } else {
@@ -39,26 +52,21 @@ router.beforeEach(async (to, from, next) => {
       //         // 这里可以用 await 配合请求后台数据来生成路由
       //         // const data = await axios.get('xxx')
       //         // const routes = createRoutes(data)
-      //         // const routes = createRoutes(store.state.menuItems)
       //         // 动态添加路由
-      //         // router.addRoutes(routes)
       //         // hasMenus = true
-      //         next({ path: to.path || '/' })
+              // next({ path: to.path || '/' })
       //     } catch (error) {
       //         // resetTokenAndClearUser()
       //         next(`/login?redirect=${to.path}`)
       //     }
       // }
   } else {
-    if(to.path === '/login') {
-      next()
-    }
-      // if (to.path === '/login') {
-      //     next()
-      // } else {
-      //     console.log('abcd')
-      //     next(`/login?redirect=${to.path}`)
-      // }
+      if (to.path === '/login') {
+          next()
+      } else {
+          console.log('abcd')
+          next(`/login?redirect=${to.path}`)
+      }
   }
 })
 

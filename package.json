@@ -15,7 +15,8 @@
     "vuex": "^3.1.2",
     "view-design": "^4.0.2",
     "vue-resource": "^1.5.1",
-    "element-ui": "^2.14.1"
+    "element-ui": "^2.14.1",
+    "ant-design-vue": "1.7.8"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
